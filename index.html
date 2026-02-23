@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قطب‌نمای سیاسی ایران - نسخه پیشرفته</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Vazirmatn', sans-serif; background-color: #121212; color: #e0e0e0; }
+        .btn-option { transition: all 0.2s; }
+        .btn-option:hover { filter: brightness(1.2); transform: scale(1.02); }
+        .modal { display: none; }
+        .modal.active { display: flex; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- Start Screen -->
+    <div id="start-screen" class="w-full max-w-3xl bg-gray-800 p-8 rounded-xl shadow-2xl text-center">
+        <h1 class="text-3xl font-bold mb-4 text-blue-400">قطب‌نمای سیاسی ایران (۲۰ شاخص)</h1>
+        <p class="text-gray-300 mb-8 leading-relaxed text-justify">
+            این آزمون تحلیلی بر پایه مدل‌سازی رفتار جریان‌های سیاسی ایران (پهلوی، چپ مارکسیستی، جمهوری اسلامی و سازمان مجاهدین خلق) در چهارچوب اقتصاد سیاسی، سیاست خارجی، حقوق اقلیت‌ها و عدالت انتقالی تنظیم شده است. سؤالات به صورت ایزوله برای تفکیک حداکثری وزن‌دهی شده‌اند.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <button onclick="startQuiz()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-lg shadow-lg text-lg">
+                شروع آزمون
+            </button>
+            <button onclick="toggleWiki()" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg text-lg border border-gray-600">
+                مطالعه پایگاه دانش (گزارش تحلیلی)
+            </button>
+        </div>
+    </div>
+
+    <!-- Wiki Modal -->
+    <div id="wiki-modal" class="modal fixed inset-0 bg-black bg-opacity-80 z-50 items-center justify-center p-4">
+        <div class="bg-gray-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl p-8 border border-gray-700">
+            <div class="flex justify-between items-center mb-6 border-b border-gray-700 pb-4">
+                <h2 class="text-2xl font-bold text-blue-400">تحلیل ساختاری جریان‌های سیاسی ایران</h2>
+                <button onclick="toggleWiki()" class="text-gray-400 hover:text-white text-3xl font-bold">&times;</button>
+            </div>
+            <div class="text-gray-300 space-y-6 leading-relaxed text-justify">
+                <p>این گزارش به عنوان یک پایگاه دانش (Wiki Knowledge) جهت ذخیره‌سازی در Google Keep تدوین شده است. شاخص‌های تحلیلی بر پایه اسناد استراتژیک (از جمله سند مرحله اضطراری «پروژه شکوفایی ایران») و مختصات کلاسیک علوم سیاسی تنظیم شده‌اند.</p>
+                
+                <h3 class="text-xl font-bold text-white mt-8">۱. جریان پهلوی (رویکرد گذار دموکراتیک و تکنوکراتیک)</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>اقتصاد:</strong> ادغام در بازار جهانی، خصوصی‌سازی، پایان دادن به انحصارات نهادهای شبه‌نظامی و جذب سرمایه‌گذاری خارجی.</li>
+                    <li><strong>ساختار گذار:</strong> تاکید بر «حفظ عملکردهای اساسی» بوروکراسی و زیرساخت‌ها. استفاده از یک «دولت گذار» قانون‌مدار برای جلوگیری از فروپاشی سیستمیک.</li>
+                    <li><strong>عدالت انتقالی:</strong> مخالفت با پاکسازی‌های گسترده (de-Ba'athification). تمرکز بر عفو عمومی برای بدنه نظامی و کارشناسی، و محدود کردن محاکمات به آمران اصلی سرکوب از طریق کمیته‌های حقیقت‌یاب.</li>
+                    <li><strong>سیاست خارجی:</strong> رویکرد رئالیستی، غیرایدئولوژیک، عادی‌سازی روابط با غرب و اسرائیل، و پذیرش FATF.</li>
+                    <li><strong>یکپارچگی سرزمینی:</strong> تمرکز شدید بر حفظ حاکمیت ملی و مقابله با هرگونه اقدام تجزیه‌طلبانه یا فدرالیسم قومی.</li>
+                </ul>
+
+                <h3 class="text-xl font-bold text-white mt-8">۲. چپ‌های ایرانی (مارکسیست‌ها و سوسیالیست‌ها)</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>اقتصاد:</strong> مخالفت جدی با اقتصاد بازار آزاد و نئولیبرالیسم. تاکید بر کنترل دولتی/سندیکایی بر ابزار تولید، توزیع ثروت و حقوق کارگران.</li>
+                    <li><strong>سیاست خارجی:</strong> رویکرد ضدامپریالیستی. مخالفت با هژمونی آمریکا و سرمایه‌داری جهانی. عموماً موضع تقابلی نسبت به اسرائیل.</li>
+                    <li><strong>ساختار سیاسی:</strong> سکولاریسم مطلق. مخالفت با الیگارشی‌های مذهبی و سرمایه‌داری (رد توأمان جمهوری اسلامی و ساختار پادشاهی).</li>
+                    <li><strong>حقوق اقلیت‌ها:</strong> تمایل تاریخی به اعطای خودمختاری، تمرکززدایی ساختاری یا فدرالیسم برای حل مسئله ستم ملی.</li>
+                </ul>
+
+                <h3 class="text-xl font-bold text-white mt-8">۳. جمهوری اسلامی (محور حاکم)</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>ساختار قدرت:</strong> تئوکراسی (ولایت فقیه)، تمرکز مطلق قدرت در نهادهای انتصابی، درهم‌تنیدگی دین و دولت.</li>
+                    <li><strong>نیروهای مسلح:</strong> تکیه بر نیروهای ایدئولوژیک (سپاه پاسداران، بسیج) به عنوان حافظان سیستم و مداخله این نهادها در شئون اقتصادی و سیاسی.</li>
+                    <li><strong>سیاست خارجی:</strong> رویکرد ایدئولوژیک، صدور انقلاب، حمایت از گروه‌های نیابتی منطقه‌ای (محور مقاومت)، غرب‌ستیزی و اسرائیل‌ستیزی مطلق.</li>
+                    <li><strong>اقتصاد:</strong> اقتصاد دولتی/رانتی (خصولتی)، تسلط بنیادها و نهادهای نظامی بر زیرساخت‌های کلان مالی.</li>
+                </ul>
+
+                <h3 class="text-xl font-bold text-white mt-8">۴. سازمان مجاهدین خلق (MEK)</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>ساختار تشکیلات:</strong> سانترالیسم دموکراتیکِ به شدت متمرکز. کیش شخصیت حول رهبری سازمان و انضباط مطلق ایدئولوژیک و تشکیلاتی.</li>
+                    <li><strong>رویکرد به قدرت:</strong> سابقه مبارزه مسلحانه. تلاش برای براندازی سریع و جایگزینی کادرهای تشکیلاتی خود به جای سیستم فعلی (مخالفت با گذار تدریجیِ مبتنی بر بوروکراسی موجود).</li>
+                    <li><strong>سیاست خارجی:</strong> چرخش پراگماتیک تاریخی؛ از مواضع ضدامپریالیستی و ترور مستشاران آمریکایی در دهه ۵۰، به همسویی کامل با بلوک غرب و جریان‌های محافظه‌کار غربی در دوران معاصر.</li>
+                    <li><strong>اجتماع:</strong> ادعای سکولاریسم و حقوق زنان در پلتفرم‌های بین‌المللی، توأم با حفظ مناسبات پوشش و رفتار کاملاً کنترل‌شده و اجباری در درون مناسبات تشکیلاتی.</li>
+                </ul>
+
+                <h3 class="text-xl font-bold text-blue-400 mt-8">مکانیزم وزن‌دهی (Scoring Logic)</h3>
+                <p>در طراحی ابزار تست، پاسخ‌ها با دامنه <code>[-1, -0.5, 0, 0.5, 1]</code> در یک ماتریس وزن‌دار متقاطع ضرب می‌شوند. نتایج پس از تجمیع، بر اساس حداکثر انحراف معیار ممکن نرمال‌سازی شده و در مقیاس ۰ تا ۱۰۰ درصد در ساختار Radar Chart به عنوان ضریب تطابق ایدئولوژیک نمایش داده می‌شوند.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div id="quiz-screen" class="w-full max-w-3xl bg-gray-800 p-8 rounded-xl shadow-2xl hidden">
+        <div class="mb-6 flex justify-between items-center text-sm text-gray-400 font-bold">
+            <span id="question-counter">سؤال ۱ از ۲۰</span>
+            <div class="w-2/3 bg-gray-700 rounded-full h-3">
+                <div id="progress-bar" class="bg-blue-500 h-3 rounded-full transition-all duration-300" style="width: 5%;"></div>
+            </div>
+        </div>
+        
+        <h2 id="question-text" class="text-2xl font-semibold mb-8 text-center leading-loose min-h-[100px] text-gray-100"></h2>
+        
+        <div class="flex flex-col gap-3">
+            <button onclick="answer(1)" class="btn-option bg-green-700 text-white py-4 rounded-lg font-bold text-lg">کاملاً موافق</button>
+            <button onclick="answer(0.5)" class="btn-option bg-green-600 bg-opacity-70 text-white py-4 rounded-lg font-bold text-lg">موافق</button>
+            <button onclick="answer(0)" class="btn-option bg-gray-600 text-white py-4 rounded-lg font-bold text-lg">ممتنع / بی‌تفاوت</button>
+            <button onclick="answer(-0.5)" class="btn-option bg-red-600 bg-opacity-70 text-white py-4 rounded-lg font-bold text-lg">مخالف</button>
+            <button onclick="answer(-1)" class="btn-option bg-red-700 text-white py-4 rounded-lg font-bold text-lg">کاملاً مخالف</button>
+        </div>
+    </div>
+
+    <!-- Result Screen -->
+    <div id="result-screen" class="w-full max-w-4xl bg-gray-800 p-8 rounded-xl shadow-2xl hidden flex-col items-center">
+        <h2 class="text-3xl font-bold mb-2 text-blue-400">تحلیل راداری مختصات سیاسی شما</h2>
+        <p class="text-gray-400 mb-6">درصد انطباق ایدئولوژیک با جریان‌های اصلی</p>
+        
+        <div class="w-full aspect-square max-w-xl mb-6 relative">
+            <canvas id="radarChart"></canvas>
+        </div>
+        
+        <div class="w-full bg-gray-900 rounded-lg p-6 mb-6 text-center border border-gray-700">
+            <h3 class="text-gray-400 text-sm uppercase tracking-wider mb-2">نزدیک‌ترین جریان به مواضع شما</h3>
+            <p id="top-match" class="text-3xl font-bold text-green-400"></p>
+        </div>
+
+        <div class="flex gap-4">
+            <button onclick="location.reload()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-lg">تکرار آزمون</button>
+            <button onclick="toggleWiki()" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-lg border border-gray-600">مرور پایگاه دانش</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { text: "واگذاری سریع صنایع بزرگ و معادن به بخش خصوصی و جذب سرمایه‌گذاری خارجی، تنها راه نجات اقتصاد است.", weights: { pahlavi: 2, left: -2, ir: -1, mek: 1 } },
+            { text: "دین باید به طور کامل از عرصه قانون‌گذاری، قضاوت و آموزش عمومی حذف شود.", weights: { pahlavi: 2, left: 2, ir: -2, mek: 1 } },
+            { text: "برقراری رابطه استراتژیک با ایالات متحده و عادی‌سازی روابط با اسرائیل، تأمین‌کننده منافع ملی است.", weights: { pahlavi: 2, left: -2, ir: -2, mek: 1 } },
+            { text: "نهادهای نظامی ایدئولوژیک (مثل سپاه) باید کاملاً منحل شده و تنها یک ارتش کلاسیک برای دفاع از مرزها وجود داشته باشد.", weights: { pahlavi: 2, left: 2, ir: -2, mek: 2 } },
+            { text: "در فرآیند تغییر رژیم، باید از فروپاشی بوروکراسی جلوگیری کرد و کارمندان و بدنه تکنوکرات فعلی را حفظ نمود.", weights: { pahlavi: 2, left: 0, ir: 2, mek: -2 } },
+            { text: "ایران نیازمند سیستم فدرالیسم یا اعطای خودمختاری به اتنیک‌ها و ملیت‌های مختلف است.", weights: { pahlavi: -2, left: 2, ir: -2, mek: 1 } },
+            { text: "پس از تغییر حکومت، باید دادگاه‌های انقلاب تشکیل داد و تمامی وابستگان رژیم پیشین را بدون استثنا پاکسازی کرد.", weights: { pahlavi: -2, left: 1, ir: -2, mek: 2 } },
+            { text: "مبارزه با امپریالیسم و سرمایه‌داری جهانی، مهم‌تر از ادغام در اقتصاد آزاد است.", weights: { pahlavi: -2, left: 2, ir: 1, mek: -1 } },
+            { text: "موفقیت یک جنبش سیاسی در گرو اطاعت مطلق از رهبری متمرکز و انضباط آهنین تشکیلاتی است.", weights: { pahlavi: -1, left: 1, ir: 2, mek: 2 } },
+            { text: "حجاب و پوشش باید کاملاً آزاد باشد و هیچ سازمان یا حکومتی حق دخالت در آن (حتی درون تشکیلات خود) را ندارد.", weights: { pahlavi: 2, left: 2, ir: -2, mek: -1 } },
+            { text: "حمایت از گروه‌های شبه‌نظامی منطقه‌ای (مثل حزب‌الله و حماس) برای تامین عمق استراتژیک ضروری است.", weights: { pahlavi: -2, left: -1, ir: 2, mek: -2 } },
+            { text: "نهادهای اقتصادی شبه‌دولتی و بنیادها باید مصادره شده و ثروت آن‌ها مستقیماً توسط شوراهای کارگری مدیریت شود.", weights: { pahlavi: -1, left: 2, ir: -2, mek: 1 } },
+            { text: "تغییر فاز سیاسی باید از طریق یک قیام مسلحانه و ارتش آزادی‌بخش صورت گیرد، نه گذار بوروکراتیک و مسالمت‌آمیز.", weights: { pahlavi: -2, left: 1, ir: -2, mek: 2 } },
+            { text: "هویت ملی ایران باید بر پایه تاریخ پیش از اسلام و ارزش‌های ناسیونالیسم متمرکز ایرانی بازتعریف شود.", weights: { pahlavi: 2, left: -2, ir: -2, mek: -1 } },
+            { text: "اعلام عفو عمومی برای بدنه نظامی و کارمندی رژیم پیشین، برای جلوگیری از خونریزی و تسهیل گذار الزامی است.", weights: { pahlavi: 2, left: -1, ir: 0, mek: -2 } },
+            { text: "ایجاد سندیکاهای کارگری مستقل و کنترل کارگران بر ابزار تولید، اساس توسعه عادلانه است.", weights: { pahlavi: -1, left: 2, ir: -2, mek: 0 } },
+            { text: "پیوستن به معاهدات مالی جهانی نظیر FATF و شفافیت کامل بانکی برای توسعه کشور حیاتی است.", weights: { pahlavi: 2, left: -1, ir: -2, mek: 1 } },
+            { text: "دموکراسی پارلمانی غربی یک سیستم پوسیده است و باید با شوراهای مردمی یا ساختارهای انقلابی جایگزین شود.", weights: { pahlavi: -2, left: 2, ir: 1, mek: 1 } },
+            { text: "وجود یک رهبر عقیدتی که فراتر از نقد باشد، برای هدایت جامعه یا سازمان به سوی رستگاری ضروری است.", weights: { pahlavi: -1, left: -1, ir: 2, mek: 2 } },
+            { text: "حفظ یک دولت متمرکز و مقتدر برای جلوگیری از بالکانیزه شدن و تجزیه ایران، بر هر نوع تمرکززدایی ارجحیت دارد.", weights: { pahlavi: 2, left: -2, ir: 2, mek: -1 } }
+        ];
+
+        let currentQuestion = 0;
+        let scores = { pahlavi: 0, left: 0, ir: 0, mek: 0 };
+        const maxScores = { pahlavi: 0, left: 0, ir: 0, mek: 0 };
+
+        questions.forEach(q => {
+            maxScores.pahlavi += Math.abs(q.weights.pahlavi);
+            maxScores.left += Math.abs(q.weights.left);
+            maxScores.ir += Math.abs(q.weights.ir);
+            maxScores.mek += Math.abs(q.weights.mek);
+        });
+
+        function toggleWiki() {
+            const modal = document.getElementById('wiki-modal');
+            modal.classList.toggle('active');
+        }
+
+        function startQuiz() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            document.getElementById('question-text').innerText = questions[currentQuestion].text;
+            document.getElementById('question-counter').innerText = `سؤال ${currentQuestion + 1} از ${questions.length}`;
+            document.getElementById('progress-bar').style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
+        }
+
+        function answer(value) {
+            const weights = questions[currentQuestion].weights;
+            scores.pahlavi += value * weights.pahlavi;
+            scores.left += value * weights.left;
+            scores.ir += value * weights.ir;
+            scores.mek += value * weights.mek;
+
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            document.getElementById('result-screen').classList.add('flex');
+
+            const normPahlavi = Math.max(0, Math.round(((scores.pahlavi / maxScores.pahlavi) + 1) * 50));
+            const normLeft = Math.max(0, Math.round(((scores.left / maxScores.left) + 1) * 50));
+            const normIR = Math.max(0, Math.round(((scores.ir / maxScores.ir) + 1) * 50));
+            const normMEK = Math.max(0, Math.round(((scores.mek / maxScores.mek) + 1) * 50));
+
+            const resultData = [normPahlavi, normLeft, normIR, normMEK];
+            const labels = ['پهلوی (گذار تکنوکراتیک)', 'چپ‌های ایرانی (سوسیالیست)', 'جمهوری اسلامی', 'سازمان مجاهدین خلق'];
+
+            let maxVal = -1;
+            let topMatch = "";
+            resultData.forEach((val, idx) => {
+                if (val > maxVal) { maxVal = val; topMatch = labels[idx]; }
+            });
+            document.getElementById('top-match').innerText = `${topMatch} (${maxVal}%)`;
+
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            Chart.defaults.color = '#a0aec0';
+            Chart.defaults.font.family = 'Vazirmatn, sans-serif';
+            
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'درصد انطباق',
+                        data: resultData,
+                        backgroundColor: 'rgba(59, 130, 246, 0.3)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        pointBackgroundColor: 'rgba(96, 165, 250, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 2,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255, 255, 255, 0.15)' },
+                            grid: { color: 'rgba(255, 255, 255, 0.15)' },
+                            pointLabels: {
+                                font: { size: 14, weight: 'bold', family: 'Vazirmatn' },
+                                color: '#e2e8f0'
+                            },
+                            ticks: {
+                                display: false,
+                                min: 0,
+                                max: 100,
+                                stepSize: 20
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
